@@ -1,1 +1,1 @@
-# todo-list
+# Todo app for The Odin Project
