@@ -11,14 +11,16 @@ const projects = [
         description: "Short todo description",
         dueDate: "2025-02-01",
         priority: "Low",
-        note: "Should not hurry for this"
+        note: "Should not hurry for this",
+        id: 0
       },
       {
         title: "Another Todo",
         description: "Short todo description",
         dueDate: "2025-02-01",
         priority: "High",
-        note: "I'm actually too late!"
+        note: "I'm actually too late!",
+        id: 1
       }
     ],
     id: 0
@@ -31,14 +33,16 @@ const projects = [
         description: "Short todo description",
         dueDate: "2025-02-01",
         priority: "Low",
-        note: "Should not hurry for this"
+        note: "Should not hurry for this",
+        id: 0
       },
       {
         title: "Another Todo",
         description: "Short todo description",
         dueDate: "2025-02-01",
         priority: "High",
-        note: "I'm actually too late!"
+        note: "I'm actually too late!",
+        id: 1
       }
     ],
     id: 1
@@ -61,5 +65,12 @@ projectsDom.forEach(project => {
     currentId = currentProject.id;
 
     currentDisplay.renderTodos(projects[currentId]);
+    currentDisplay.renderForm({
+      title: "",
+      description: "",
+      dueDate: "",
+      priority: "",
+      note: ""
+    }, projects[currentId]);
   })
 })
