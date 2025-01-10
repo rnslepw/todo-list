@@ -1,20 +1,36 @@
+import Todo from "./todo";
+
 export default class Display {
-  projects = document.querySelector('.projects');
+  projectsDom = document.querySelector('.projects');
   todos = document.querySelector('.todos');
   dialog = document.querySelector('dialog');
   addBtn = document.querySelector('.add-btn');
   form = document.querySelector('form');
 
+  currentId = 0;
+
+  constructor(projectsData) {
+    this.projectsData = projectsData
+  }
+
+  renderProjects() {
+    this.projectsData.forEach(project => {
+      this.renderProject(project);
+      // currentDisplay.renderTodos(projects[currentId]);
+    })
+  }
+
   renderProject(project) {
     const newProject = document.createElement('h3');
     newProject.classList.add('project');
     newProject.textContent = project.title;
-    this.projects.appendChild(newProject);
+    this.projectsDom.appendChild(newProject);
   }
 
   renderTodos(project) {
 
     this.todos.innerHTML = '';
+    this.currentId = project.id;
 
     project.todos.forEach(todo => {
       const todoCard = document.createElement('div');
@@ -45,7 +61,7 @@ export default class Display {
     })
   }
 
-  renderForm(todo, project) {
+  renderForm() {
     const title = document.querySelector("#title");
     const description = document.querySelector("#description");
     const dueDate = document.querySelector("#date");
@@ -54,28 +70,16 @@ export default class Display {
 
     this.addBtn.addEventListener('click', () => {
       this.dialog.showModal();
-      title.value = todo.title;
-      description.value = todo.description;
-      dueDate.value = todo.dueDate;
-      priority.value = todo.priority;
-      note.value = todo.note;
     })
-
+    
     this.form.addEventListener('submit', (e) => {
       e.preventDefault();
-      
-      const newTodo = {
-        title: title.value,
-        description: description.value,
-        dueDate: dueDate.value,
-        priority: priority.value,
-        note: note.value,
-        id: project.todos.length
-      }
+      const currentProject = this.projectsData[this.currentId];
 
-      project.todos.push(newTodo);
-      this.renderTodos(project);
+      const newTodo = new Todo(title.value, description.value, dueDate.value, priority.value, note.value, currentProject.todos.length);
 
+      newTodo.saveTodo(currentProject);
+      this.renderTodos(currentProject);
       this.dialog.close();
     })
   }

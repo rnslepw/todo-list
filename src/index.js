@@ -49,28 +49,21 @@ const projects = [
   }
 ]
 
-let currentId = 0;
+const currentDisplay = new Display(projects);
 
-const currentDisplay = new Display();
+currentDisplay.renderProjects();
 
-projects.forEach(project => {
-  currentDisplay.renderProject(project);
-  currentDisplay.renderTodos(projects[currentId]);
-})
-
-const projectsDom = document.querySelectorAll('.project');
-projectsDom.forEach(project => {
+const projectsDOM = document.querySelectorAll('.project');
+projectsDOM.forEach(project => {
   project.addEventListener('click', (e) => {
-    const currentProject = projects.find(project => project.title === e.target.textContent);
-    currentId = currentProject.id;
-
-    currentDisplay.renderTodos(projects[currentId]);
-    currentDisplay.renderForm({
-      title: "",
-      description: "",
-      dueDate: "",
-      priority: "",
-      note: ""
-    }, projects[currentId]);
+    const currentProject = projects.find(p => p.title === e.target.textContent);
+    currentDisplay.renderTodos(currentProject);
   })
 })
+
+currentDisplay.renderForm();
+
+
+
+
+
