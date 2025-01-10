@@ -2,6 +2,7 @@ import Todo from "./todo";
 
 export default class Display {
   projectsDom = document.querySelector('.projects');
+  main = document.querySelector('main');
   todos = document.querySelector('.todos');
   dialog = document.querySelector('dialog');
   addBtn = document.querySelector('.add-btn');
@@ -16,7 +17,7 @@ export default class Display {
   renderProjects() {
     this.projectsData.forEach(project => {
       this.renderProject(project);
-      // currentDisplay.renderTodos(projects[currentId]);
+      this.renderTodos(this.projectsData[this.currentId]);
     })
   }
 
@@ -25,6 +26,22 @@ export default class Display {
     newProject.classList.add('project');
     newProject.textContent = project.title;
     this.projectsDom.appendChild(newProject);
+  }
+
+  renderAddBtn() {
+    const addBtn = document.createElement('button');
+    addBtn.textContent = 'Add Todo';
+    this.main.insertBefore(addBtn, this.todos);
+
+    addBtn.addEventListener('click', () => {
+      this.renderAddForm({
+        title: '',
+        description: '',
+        dueDate: '',
+        priority: '',
+        note: ''
+      });
+    })
   }
 
   renderTodos(project) {
@@ -51,36 +68,80 @@ export default class Display {
       const notes = document.createElement('p');
       notes.textContent = todo.note;
 
+      const editBtn = document.createElement('button');
+      editBtn.textContent = 'Edit';
+      editBtn.addEventListener('click', () => {
+        this.renderEditForm(todo);
+      })
+      
       todoCard.appendChild(todoTitle);
       todoCard.appendChild(todoDescription);
       todoCard.appendChild(todoDueDate);
       todoCard.appendChild(priority);
       todoCard.appendChild(notes);
+      todoCard.appendChild(editBtn);
 
       this.todos.appendChild(todoCard);
     })
   }
 
-  renderForm() {
+  renderAddForm(todo) {
     const title = document.querySelector("#title");
     const description = document.querySelector("#description");
     const dueDate = document.querySelector("#date");
     const priority = document.querySelector("#priority");
     const note = document.querySelector("#note");
 
-    this.addBtn.addEventListener('click', () => {
-      this.dialog.showModal();
-    })
+    title.value = todo.title;
+    description.value = todo.description;
+    dueDate.value = todo.dueDate;
+    priority.value = todo.priority;
+    note.value = todo.note;
+    
+    this.dialog.showModal();
     
     this.form.addEventListener('submit', (e) => {
       e.preventDefault();
       const currentProject = this.projectsData[this.currentId];
-
+        
       const newTodo = new Todo(title.value, description.value, dueDate.value, priority.value, note.value, currentProject.todos.length);
 
-      newTodo.saveTodo(currentProject);
+      currentProject.todos = newTodo.saveTodo(currentProject, newTodo);
+      
       this.renderTodos(currentProject);
+
+      this.dialog.close();
+    }, {once: true});
+  }
+
+  renderEditForm(todo) {
+    const title = document.querySelector("#title");
+    const description = document.querySelector("#description");
+    const dueDate = document.querySelector("#date");
+    const priority = document.querySelector("#priority");
+    const note = document.querySelector("#note");
+
+    title.value = todo.title;
+    description.value = todo.description;
+    dueDate.value = todo.dueDate;
+    priority.value = todo.priority;
+    note.value = todo.note;
+    
+    this.dialog.showModal();
+    
+    this.form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const currentProject = this.projectsData[this.currentId];
+        
+      const newTodo = new Todo(title.value, description.value, dueDate.value, priority.value, note.value, todo.id);
+      
+      currentProject.todos = newTodo.editTodo(currentProject, todo, newTodo);
+
+      this.renderTodos(currentProject);
+
       this.dialog.close();
     })
   }
+
+  
 };

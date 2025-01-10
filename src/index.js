@@ -52,6 +52,7 @@ const projects = [
 const currentDisplay = new Display(projects);
 
 currentDisplay.renderProjects();
+currentDisplay.renderAddBtn();
 
 const projectsDOM = document.querySelectorAll('.project');
 projectsDOM.forEach(project => {
@@ -60,8 +61,6 @@ projectsDOM.forEach(project => {
     currentDisplay.renderTodos(currentProject);
   })
 })
-
-currentDisplay.renderForm();
 
 
 

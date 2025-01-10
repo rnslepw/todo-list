@@ -8,7 +8,11 @@ export default class Todo {
     this.id = id
   }
 
-  saveTodo(project) {
-    project.todos.push(this);
+  saveTodo(project, newTodo) {
+    return project.todos.concat(newTodo);
+  }
+
+  editTodo(project, todo, newTodo) {
+    return project.todos.map(t => t.title === todo.title ? newTodo : t);
   }
 }
