@@ -4,8 +4,4 @@ export default class Project {
     this.todos = [];
     this.id = id;
   }
-
-  createProject(projects) {
-   return projects.concat(this);
-  }
 };

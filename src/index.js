@@ -1,8 +1,9 @@
 import './styles.css';
 
 import Display from './components/display';
+import Storage from './components/storage';
 
-const projects = [
+const initialProjects = [
   {
     title: 'First Project',
     todos: [
@@ -46,21 +47,15 @@ const projects = [
       }
     ],
     id: 1
-  }
+  },
 ]
 
-const currentDisplay = new Display(projects);
+const storage = new Storage(initialProjects);
+const currentDisplay = new Display(storage);
 
 currentDisplay.renderProjects();
 currentDisplay.renderAddBtn();
 
-// const projectsDOM = document.querySelectorAll('.project');
-// projectsDOM.forEach(project => {
-//   project.addEventListener('click', (e) => {
-//     const currentProject = projects.find(p => p.title === e.target.textContent);
-//     currentDisplay.renderTodos(currentProject);
-//   })
-// })
 
 
 

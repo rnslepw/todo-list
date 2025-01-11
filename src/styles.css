@@ -28,11 +28,16 @@ aside {
   width: 100%;
 }
 
+.project-group {
+  width: 100%;
+  display: flex;
+  background-color: red;
+}
+
 .project {
   display: block;
   background-color: lightgreen;
-  padding: 1rem;
-  text-align: center;
+  padding: 0.5rem;
   width: 100%;
   cursor: pointer;
 }
@@ -68,6 +73,11 @@ main {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  gap: 1rem;
+}
+
+.btn-container {
+  display: flex;
   gap: 1rem;
 }
 

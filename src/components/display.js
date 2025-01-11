@@ -14,11 +14,12 @@ export default class Display {
   abort = document.querySelector('.abort');
 
   currentId = 0;
-
-  constructor(projectsData) {
-    this.projectsData = projectsData
+  
+  constructor(storage) {
+    this.storage = storage;
+    this.projectsData = storage.initialize();
   }
-
+  
   renderProjects() {
     this.projects.innerHTML = '';
     this.projectsData.forEach(project => {
@@ -29,6 +30,8 @@ export default class Display {
   }
 
   renderProject(project) {
+    const projectGroup = document.createElement('div');
+    projectGroup.classList.add('project-group');
     const newProject = document.createElement('h3');
     newProject.classList.add('project');
     newProject.textContent = project.title;
@@ -36,7 +39,19 @@ export default class Display {
       const currentProject = this.projectsData.find(p => p.title === e.target.textContent);
       this.renderTodos(currentProject);
     })
-    this.projects.appendChild(newProject);
+    projectGroup.appendChild(newProject);
+
+    if (project.id !== 0) {
+      const deleteProject = document.createElement('button');
+      deleteProject.classList.add('delete-btn');
+      deleteProject.textContent = 'X';
+      deleteProject.addEventListener('click', () => {
+        this.renderDeleteProject(project);
+      })
+      projectGroup.appendChild(deleteProject);
+    }
+
+    this.projects.appendChild(projectGroup);
   }
 
   renderProjectForm() {
@@ -57,14 +72,10 @@ export default class Display {
 
     projectsForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      console.log('Working');
       
       const newProject = new Project(projectsInput.value, this.projectsData.length);
-      this.projectsData = newProject.createProject(this.projectsData);
-
-      console.log(newProject, this.projectsData);
+      this.projectsData = this.storage.addProject(newProject);
       
-
       this.currentId = newProject.id;
       this.renderProjects();
     })
@@ -110,6 +121,9 @@ export default class Display {
       const notes = document.createElement('p');
       notes.textContent = todo.note;
 
+      const btnContainer = document.createElement('div');
+      btnContainer.classList.add('btn-container');
+
       const editBtn = document.createElement('button');
       editBtn.textContent = 'Edit';
       editBtn.addEventListener('click', () => {
@@ -119,16 +133,18 @@ export default class Display {
       const deleteBtn = document.createElement('button');
       deleteBtn.textContent = 'Delete';
       deleteBtn.addEventListener('click', () => {
-        this.renderDelete(project, todo);
+        this.renderDeleteNote(project, todo);
       })
+
+      btnContainer.appendChild(editBtn);
+      btnContainer.appendChild(deleteBtn);
       
       todoCard.appendChild(todoTitle);
       todoCard.appendChild(todoDescription);
       todoCard.appendChild(todoDueDate);
       todoCard.appendChild(priority);
       todoCard.appendChild(notes);
-      todoCard.appendChild(editBtn);
-      todoCard.appendChild(deleteBtn);
+      todoCard.appendChild(btnContainer);
 
       this.todos.appendChild(todoCard);
     })
@@ -154,10 +170,10 @@ export default class Display {
       const currentProject = this.projectsData[this.currentId];
         
       const newTodo = new Todo(title.value, description.value, dueDate.value, priority.value, note.value, currentProject.todos.length);
-
-      currentProject.todos = newTodo.saveTodo(currentProject, newTodo);
       
-      this.renderTodos(currentProject);
+      this.projectsData = this.storage.addTodo(currentProject, newTodo);
+    
+      this.renderTodos(this.projectsData[this.currentId]);
 
       this.dialogForm.close();
     }, {once: true});
@@ -183,25 +199,39 @@ export default class Display {
       const currentProject = this.projectsData[this.currentId];
         
       const newTodo = new Todo(title.value, description.value, dueDate.value, priority.value, note.value, todo.id);
-      
-      currentProject.todos = newTodo.editTodo(currentProject, todo, newTodo);
 
-      this.renderTodos(currentProject);
+      this.projectsData = this.storage.editTodo(currentProject, todo, newTodo);
+    
+      this.renderTodos(this.projectsData[this.currentId]);
 
       this.dialogForm.close();
     })
   }
 
-  renderDelete(project, todo) {
+  renderDeleteNote(project, todo) {
     this.dialogDelete.showModal();
 
     this.confirm.addEventListener('click', () => {
-      const currentTodo = new Todo(todo.title, todo.description, todo.dueDate, todo.priority, todo.note, todo.id);
-      console.log(currentTodo);
-      project.todos = currentTodo.deleteTodo(project, todo);
+      this.projectsData = this.storage.deleteTodo(project, todo);
+      this.renderTodos(this.projectsData[project.id]);
 
       this.dialogDelete.close()
-      this.renderTodos(project);
+    })
+
+    this.abort.addEventListener('click', () => {
+      this.dialogDelete.close();
+    })
+  }
+
+  renderDeleteProject(project) {
+    this.dialogDelete.showModal();
+
+    this.confirm.addEventListener('click', () => {
+      const currentProject = new Project(project.title, project.id);
+      this.projectsData = this.storage.deleteProject(currentProject)
+      this.currentId = 0;
+      this.renderProjects(this.projectsData);
+      this.dialogDelete.close()
     })
 
     this.abort.addEventListener('click', () => {
