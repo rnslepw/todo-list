@@ -1,12 +1,17 @@
 import Todo from "./todo";
+import Project from "./project";
 
 export default class Display {
-  projectsDom = document.querySelector('.projects');
+  projects = document.querySelector('.projects');
+  projectsDOM = document.querySelectorAll('.project');
   main = document.querySelector('main');
   todos = document.querySelector('.todos');
-  dialog = document.querySelector('dialog');
+  dialogForm = document.querySelector('.dialog-form');
   addBtn = document.querySelector('.add-btn');
   form = document.querySelector('form');
+  dialogDelete = document.querySelector('.dialog-delete');
+  confirm = document.querySelector('.confirm');
+  abort = document.querySelector('.abort');
 
   currentId = 0;
 
@@ -15,17 +20,54 @@ export default class Display {
   }
 
   renderProjects() {
+    this.projects.innerHTML = '';
     this.projectsData.forEach(project => {
       this.renderProject(project);
       this.renderTodos(this.projectsData[this.currentId]);
     })
+    this.renderProjectForm();
   }
 
   renderProject(project) {
     const newProject = document.createElement('h3');
     newProject.classList.add('project');
     newProject.textContent = project.title;
-    this.projectsDom.appendChild(newProject);
+    newProject.addEventListener('click', (e) => {
+      const currentProject = this.projectsData.find(p => p.title === e.target.textContent);
+      this.renderTodos(currentProject);
+    })
+    this.projects.appendChild(newProject);
+  }
+
+  renderProjectForm() {
+    const projectsForm = document.createElement('form');
+    projectsForm.classList.add('project-form');
+    const projectsLegend = document.createElement('legend');
+    projectsLegend.textContent = "Add new project";
+    const projectsInput = document.createElement('input');
+    const projectsBtn = document.createElement('button');
+    projectsBtn.textContent = 'Add Project';
+    projectsBtn.type = 'submit';
+
+    projectsForm.appendChild(projectsLegend);
+    projectsForm.appendChild(projectsInput);
+    projectsForm.appendChild(projectsBtn);
+    this.projects.appendChild(projectsForm);
+    
+
+    projectsForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      console.log('Working');
+      
+      const newProject = new Project(projectsInput.value, this.projectsData.length);
+      this.projectsData = newProject.createProject(this.projectsData);
+
+      console.log(newProject, this.projectsData);
+      
+
+      this.currentId = newProject.id;
+      this.renderProjects();
+    })
   }
 
   renderAddBtn() {
@@ -73,6 +115,12 @@ export default class Display {
       editBtn.addEventListener('click', () => {
         this.renderEditForm(todo);
       })
+
+      const deleteBtn = document.createElement('button');
+      deleteBtn.textContent = 'Delete';
+      deleteBtn.addEventListener('click', () => {
+        this.renderDelete(project, todo);
+      })
       
       todoCard.appendChild(todoTitle);
       todoCard.appendChild(todoDescription);
@@ -80,6 +128,7 @@ export default class Display {
       todoCard.appendChild(priority);
       todoCard.appendChild(notes);
       todoCard.appendChild(editBtn);
+      todoCard.appendChild(deleteBtn);
 
       this.todos.appendChild(todoCard);
     })
@@ -98,7 +147,7 @@ export default class Display {
     priority.value = todo.priority;
     note.value = todo.note;
     
-    this.dialog.showModal();
+    this.dialogForm.showModal();
     
     this.form.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -110,7 +159,7 @@ export default class Display {
       
       this.renderTodos(currentProject);
 
-      this.dialog.close();
+      this.dialogForm.close();
     }, {once: true});
   }
 
@@ -127,7 +176,7 @@ export default class Display {
     priority.value = todo.priority;
     note.value = todo.note;
     
-    this.dialog.showModal();
+    this.dialogForm.showModal();
     
     this.form.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -139,9 +188,24 @@ export default class Display {
 
       this.renderTodos(currentProject);
 
-      this.dialog.close();
+      this.dialogForm.close();
     })
   }
 
-  
+  renderDelete(project, todo) {
+    this.dialogDelete.showModal();
+
+    this.confirm.addEventListener('click', () => {
+      const currentTodo = new Todo(todo.title, todo.description, todo.dueDate, todo.priority, todo.note, todo.id);
+      console.log(currentTodo);
+      project.todos = currentTodo.deleteTodo(project, todo);
+
+      this.dialogDelete.close()
+      this.renderTodos(project);
+    })
+
+    this.abort.addEventListener('click', () => {
+      this.dialogDelete.close();
+    })
+  }
 };

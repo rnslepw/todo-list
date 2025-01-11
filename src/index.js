@@ -54,13 +54,13 @@ const currentDisplay = new Display(projects);
 currentDisplay.renderProjects();
 currentDisplay.renderAddBtn();
 
-const projectsDOM = document.querySelectorAll('.project');
-projectsDOM.forEach(project => {
-  project.addEventListener('click', (e) => {
-    const currentProject = projects.find(p => p.title === e.target.textContent);
-    currentDisplay.renderTodos(currentProject);
-  })
-})
+// const projectsDOM = document.querySelectorAll('.project');
+// projectsDOM.forEach(project => {
+//   project.addEventListener('click', (e) => {
+//     const currentProject = projects.find(p => p.title === e.target.textContent);
+//     currentDisplay.renderTodos(currentProject);
+//   })
+// })
 
 
 

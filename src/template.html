@@ -10,13 +10,12 @@
     <aside>
       <h1>Todo List</h1>
       <div class="projects">
-        <h2>Projects</h2>
       </div>
     </aside>
     <main>
       <div class="todos"></div>
     </main>
-    <dialog>
+    <dialog class="dialog-form">
       <form>
         <legend>Todo Details</legend>
         <div class="input-group">
@@ -43,6 +42,13 @@
         </div>
         <button class="close-btn" type="submit">Submit</button>
       </form>
+    </dialog>
+    <dialog class="dialog-delete">
+      <div class="dialog-btns">
+        <p class="dialog-title">Are you sure?</p>
+        <button class="confirm">Confirm</button>
+        <button class="abort">Abort</button>
+      </div>
     </dialog>
   </div>
 </body>

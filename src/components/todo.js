@@ -15,4 +15,8 @@ export default class Todo {
   editTodo(project, todo, newTodo) {
     return project.todos.map(t => t.title === todo.title ? newTodo : t);
   }
+
+  deleteTodo(project, todo) {
+    return project.todos.filter(t => t.title === todo.title ? null : t);
+  }
 }
