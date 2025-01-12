@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Todo List</title>
+<script defer src="main.js"></script></head>
+<body>
+  <div class="container">
+    <aside>
+      <h1 class="title">Todo List</h1>
+      <div class="projects">
+      </div>
+    </aside>
+    <main>
+      <div class="todos"></div>
+    </main>
+    <dialog class="dialog-form">
+      <form>
+        <legend>Todo Details</legend>
+        <div class="input-group">
+          <label for="title">Title:</label>
+          <input type="text" id="title" name="title">
+        </div>
+        <div class="input-group">
+          <label for="description">Description</label>
+          <input type="text" id="description" name="description">
+        </div>
+        <div class="input-group">
+          <label for="date">Due Date:</label>
+          <input type="date" id="date" name="date">
+        </div>
+        <div class="input-group">
+          <label for="priority">Priority</label>
+          <select name="priority" id="priority">
+            <option value="High">High</option>
+            <option value="Low">Low</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <textarea name="note" id="note" rows="5"></textarea>
+        </div>
+        <button class="close-btn" type="submit">Submit</button>
+      </form>
+    </dialog>
+    <dialog class="dialog-delete">
+      <div class="dialog-btns">
+        <p class="dialog-title">Are you sure?</p>
+        <button class="confirm">Confirm</button>
+        <button class="abort">Abort</button>
+      </div>
+    </dialog>
+  </div>
+</body>
+</html>
