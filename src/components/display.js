@@ -60,6 +60,7 @@ export default class Display {
     const projectsLegend = document.createElement('legend');
     projectsLegend.textContent = "Add new project";
     const projectsInput = document.createElement('input');
+    projectsInput.required = true;
     const projectsBtn = document.createElement('button');
     projectsBtn.textContent = 'Add Project';
     projectsBtn.type = 'submit';

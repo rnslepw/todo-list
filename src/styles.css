@@ -68,7 +68,7 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1rem;
+  padding: 1.5rem;
   gap: 1rem;
   background-color: #cbd5e1;
 }
@@ -83,7 +83,7 @@ main {
 }
 
 .todo {
-  flex: 0 0 25rem;
+  flex: 0 0 20rem;
   background-color: #475569;
   color: white;
   width: 90%;
