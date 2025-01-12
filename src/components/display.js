@@ -111,21 +111,28 @@ export default class Display {
 
       const todoDescription = document.createElement('p');
       todoDescription.textContent = todo.description;
+      todoDescription.classList.add('todo-description');
+
+      const todoText = document.createElement('div');
+      todoText.classList.add('todo-text');
 
       const todoDueDate = document.createElement('p');
-      todoDueDate.textContent = todo.dueDate;
+      todoDueDate.textContent = `Due date: ${todo.dueDate}`;
 
       const priority = document.createElement('p');
       priority.textContent = `Priority: ${todo.priority}`;
 
+      todoText.appendChild(todoDueDate);
+      todoText.appendChild(priority);
+
       const notes = document.createElement('p');
-      notes.textContent = todo.note;
+      notes.textContent = `NOTE: ${todo.note}`;
 
       const btnContainer = document.createElement('div');
       btnContainer.classList.add('btn-container');
 
       const editBtn = document.createElement('button');
-      editBtn.textContent = 'Edit';
+      editBtn.textContent = 'Change';
       editBtn.addEventListener('click', () => {
         this.renderEditForm(todo);
       })
@@ -141,8 +148,7 @@ export default class Display {
       
       todoCard.appendChild(todoTitle);
       todoCard.appendChild(todoDescription);
-      todoCard.appendChild(todoDueDate);
-      todoCard.appendChild(priority);
+      todoCard.appendChild(todoText);
       todoCard.appendChild(notes);
       todoCard.appendChild(btnContainer);
 
